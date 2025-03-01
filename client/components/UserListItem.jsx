@@ -7,12 +7,13 @@ export default function UserListItem({
     email,
     phoneNumber,
     createdAt,
+    imageUrl
 }) {
     return (
         <tr>
             <td>
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-                    alt="Peter's profile" className="image" />
+                <img src={imageUrl}
+                    alt={`${firstName}'s profile`} className="image" />
             </td>
             <td>{firstName}</td>
             <td>{lastName}</td>

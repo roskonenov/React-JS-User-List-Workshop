@@ -7,4 +7,20 @@ export default {
         const data = await result.json();
         return Object.values(data);
     },
+
+    async createUser(userData) {
+        const {country, city, street, streetNumber, ...postData} = userData;
+        postData.address = {country, city, street, streetNumber};
+        postData.createdAt = new Date().toISOString();
+        postData.updatedAt = new Date().toISOString();
+
+        const response = await fetch(baseUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData)
+        });
+        return await response.json();
+    }
 }

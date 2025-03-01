@@ -3,19 +3,42 @@ import userService from "../services/userService";
 import Pagination from "./Pagination";
 import SearchBar from "./SearchBar";
 import UserListItem from "./UserListItem";
+import CreateEditUser from "./CreateEditUser";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
+    const [openCreateUser, setOpenCreateUser] = useState(false);
 
     useEffect(() => {
         userService.getAllUsers()
             .then(result => setUsers(result));
     }, []);
 
+    function CreateUserClickHandler() {
+        setOpenCreateUser(true);
+    }
+
+    async function saveCreateUserClickHandler(e) {
+        e.preventDefault();
+
+        const formValues = Object.fromEntries(new FormData(e.target));
+        const newUser = await userService.createUser(formValues)
+        setUsers(u => [...u, newUser]);
+        setOpenCreateUser(false);
+    }
+
+    function closeCreateUserClickHandler() {
+        setOpenCreateUser(false);
+    }
+
     return (
         <section className="card users-container">
             <SearchBar />
-
+            {openCreateUser &&
+                <CreateEditUser
+                    onClose={closeCreateUserClickHandler}
+                    onSave={saveCreateUserClickHandler}
+                />}
             <div className="table-wrapper">
                 <div>
                     {/* <!-- Overlap components  --> */}
@@ -145,16 +168,16 @@ export default function UserList() {
                     </thead>
                     <tbody>
                         {users.map(user =>
-                            <UserListItem 
-                            key = {user._id}
-                            {...user}/>)
+                            <UserListItem
+                                key={user._id}
+                                {...user} />)
                         }
 
                     </tbody>
                 </table>
             </div>
 
-            <button className="btn-add btn">Add new user</button>
+            <button className="btn-add btn" onClick={CreateUserClickHandler}>Add new user</button>
 
             <Pagination />
         </section>
