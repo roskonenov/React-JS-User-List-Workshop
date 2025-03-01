@@ -6,8 +6,7 @@ import './App.css'
 function App() {
 
   return (
-    <>
-      <body>
+      <>
         <Header />
 
         <main className="main">
@@ -190,8 +189,7 @@ function App() {
 
         </main>
         <Footer />
-      </body>
-    </>
+      </>
   )
 }
 

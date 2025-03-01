@@ -1,11 +1,20 @@
+import { useEffect, useState } from "react";
+import userService from "../services/userService";
 import Pagination from "./Pagination";
-import SearcBar from "./SearchBar";
+import SearchBar from "./SearchBar";
 import UserListItem from "./UserListItem";
 
 export default function UserList() {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        userService.getAllUsers()
+            .then(result => setUsers(result));
+    }, []);
+
     return (
         <section className="card users-container">
-            <SearcBar />
+            <SearchBar />
 
             <div className="table-wrapper">
                 <div>
@@ -135,7 +144,12 @@ export default function UserList() {
                         </tr>
                     </thead>
                     <tbody>
-                        <UserListItem />
+                        {users.map(user =>
+                            <UserListItem 
+                            key = {user._id}
+                            {...user}/>)
+                        }
+
                     </tbody>
                 </table>
             </div>
