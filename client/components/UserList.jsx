@@ -5,11 +5,14 @@ import SearchBar from "./SearchBar";
 import UserListItem from "./UserListItem";
 import CreateEditUser from "./CreateEditUser";
 import UserDetails from "./UserDetails";
+import UserDelete from "./UserDelete";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
     const [openCreateUser, setOpenCreateUser] = useState(false);
     const [userInfoId, setUserInfoId] = useState(null);
+    const [userDeleteId, setUserDeleteId] = useState(null);
+    const [userEditId, setUserEditId] = useState(null);
 
     useEffect(() => {
         userService.getAllUsers()
@@ -35,12 +38,35 @@ export default function UserList() {
 
     async function userDetailsOpenHandler(userId) {
         setUserInfoId(userId);
-        
+
     }
 
     function userDetailsCloseHandler() {
         setUserInfoId(null);
     }
+
+    function userDeleteClickHandler(userId) {
+        setUserDeleteId(userId);
+    }
+
+    function closeDeleteUserClickHandler() {
+        setUserDeleteId(null);
+    }
+
+    async function userDeleteHandler() {
+        const deletedUser = await userService.deleteUser(userDeleteId);
+        setUsers(u => u.filter(user => user._id !== deletedUser._id));
+        setUserDeleteId(null);
+    }
+
+    function userEditClickHandler(userId) {
+        setUserEditId(userId);
+    }
+
+    function saveEditUserClickHandler() {
+        
+    }
+
 
     return (
         <section className="card users-container">
@@ -54,8 +80,21 @@ export default function UserList() {
 
             {userInfoId &&
                 <UserDetails
-                    userId= {userInfoId}
+                    userId={userInfoId}
                     onClose={userDetailsCloseHandler}
+                />}
+
+            {userDeleteId &&
+                <UserDelete
+                    onClose={closeDeleteUserClickHandler}
+                    onDelete={userDeleteHandler}
+                />}
+
+            {userEditId &&
+                <CreateEditUser
+                    onClose={closeCreateUserClickHandler}
+                    onSave={saveCreateUserClickHandler}
+                    onEdit={saveEditUserClickHandler}
                 />}
 
             <div className="table-wrapper">
@@ -191,6 +230,8 @@ export default function UserList() {
                             <UserListItem
                                 key={user._id}
                                 onInfoClick={userDetailsOpenHandler}
+                                onDeleteClick={userDeleteClickHandler}
+                                onEditClick={userEditClickHandler}
                                 {...user} />)
                         }
 

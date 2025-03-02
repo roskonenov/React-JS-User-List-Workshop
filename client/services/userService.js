@@ -27,5 +27,12 @@ export default {
     async getUser(userId) {
         const result = await fetch(`${baseUrl}/${userId}`);
         return await result.json();
+    },
+
+    async deleteUser(userId) {
+        const result = await fetch(`${baseUrl}/${userId}`, {
+            method: 'DELETE',
+        });
+        return await result.json();
     }
 }

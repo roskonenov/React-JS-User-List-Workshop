@@ -1,6 +1,7 @@
 export default function CreateEditUser({
     onClose,
     onSave,
+    onEdit,
 }) {
     
     return (
@@ -19,7 +20,7 @@ export default function CreateEditUser({
                             </svg>
                         </button>
                     </header>
-                    <form onSubmit={onSave}>
+                    <form>
                         <div className="form-row">
                             <div className="form-group">
                                 <label htmlFor="firstName">First name</label>
@@ -97,9 +98,7 @@ export default function CreateEditUser({
                         </div>
                         <div id="form-actions">
                             <button id="action-save" className="btn" type="submit">Save</button>
-                            <button id="action-cancel" className="btn" type="button" onClick={onClose}>
-                                Cancel
-                            </button>
+                            <button id="action-cancel" className="btn" type="button" onClick={onClose}>Cancel</button>
                         </div>
                     </form>
                 </div>
