@@ -4,10 +4,12 @@ import Pagination from "./Pagination";
 import SearchBar from "./SearchBar";
 import UserListItem from "./UserListItem";
 import CreateEditUser from "./CreateEditUser";
+import UserDetails from "./UserDetails";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
     const [openCreateUser, setOpenCreateUser] = useState(false);
+    const [userInfoId, setUserInfoId] = useState(null);
 
     useEffect(() => {
         userService.getAllUsers()
@@ -31,14 +33,31 @@ export default function UserList() {
         setOpenCreateUser(false);
     }
 
+    async function userDetailsOpenHandler(userId) {
+        setUserInfoId(userId);
+        
+    }
+
+    function userDetailsCloseHandler() {
+        setUserInfoId(null);
+    }
+
     return (
         <section className="card users-container">
+
             <SearchBar />
             {openCreateUser &&
                 <CreateEditUser
                     onClose={closeCreateUserClickHandler}
                     onSave={saveCreateUserClickHandler}
                 />}
+
+            {userInfoId &&
+                <UserDetails
+                    userId= {userInfoId}
+                    onClose={userDetailsCloseHandler}
+                />}
+
             <div className="table-wrapper">
                 <div>
                     {/* <!-- Overlap components  --> */}
@@ -167,9 +186,11 @@ export default function UserList() {
                         </tr>
                     </thead>
                     <tbody>
+
                         {users.map(user =>
                             <UserListItem
                                 key={user._id}
+                                onInfoClick={userDetailsOpenHandler}
                                 {...user} />)
                         }
 
@@ -180,6 +201,7 @@ export default function UserList() {
             <button className="btn-add btn" onClick={CreateUserClickHandler}>Add new user</button>
 
             <Pagination />
+
         </section>
     );
 }

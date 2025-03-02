@@ -22,5 +22,10 @@ export default {
             body: JSON.stringify(postData)
         });
         return await response.json();
+    },
+
+    async getUser(userId) {
+        const result = await fetch(`${baseUrl}/${userId}`);
+        return await result.json();
     }
 }
