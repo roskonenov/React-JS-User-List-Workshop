@@ -9,19 +9,16 @@ export default {
     },
 
     async createUser(userData) {
-        const {country, city, street, streetNumber, ...postData} = userData;
-        postData.address = {country, city, street, streetNumber};
-        postData.createdAt = new Date().toISOString();
-        postData.updatedAt = new Date().toISOString();
+        const postData = refactorUserData(userData);
 
-        const response = await fetch(baseUrl, {
+        const result = await fetch(baseUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(postData)
         });
-        return await response.json();
+        return await result.json();
     },
 
     async getUser(userId) {
@@ -34,5 +31,28 @@ export default {
             method: 'DELETE',
         });
         return await result.json();
+    },
+
+    async updateUser(userId, userData) {
+        const postData = refactorUserData(userData);
+        postData._id = userId;
+        const result = await fetch(`${baseUrl}/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
+        });
+        return await result.json();
     }
+}
+
+function refactorUserData(userData) {
+    const {country, city, street, streetNumber, ...refactoredData} = userData;
+    
+        refactoredData.address = {country, city, street, streetNumber};
+        refactoredData.createdAt = userData.createdAt ? userData.createdAt[0] : new Date().toISOString();
+        refactoredData.updatedAt = new Date().toISOString();
+        
+        return refactoredData;
 }
